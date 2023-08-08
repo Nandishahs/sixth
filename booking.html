@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking App</title>
+</head>
+<body>
+<h1>Booking App</h1>
+
+<div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+</div>
+
+<div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+</div>
+
+<div>
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" required>
+</div>
+
+<button onclick="addBooking()">Add Booking</button>
+<button onclick="displayBookings()">Display Bookings</button>
+
+<h2>Bookings:</h2>
+<ul id="bookingList"></ul>
+
+<script>
+    let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+    function addBooking() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+
+        if (name && email && phone) {
+            const booking = { name, email, phone };
+            bookings.push(booking);
+            clearInputFields();
+            updateBookingList();
+            saveToLocalStorage();
+            console.log("Booking added successfully!");
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+
+    function displayBookings() {
+        const bookingList = document.getElementById("bookingList");
+        bookingList.innerHTML = "";
+
+        if (bookings.length === 0) {
+            const listItem = document.createElement("li");
+            listItem.textContent = "No bookings available.";
+            bookingList.appendChild(listItem);
+        } else {
+            bookings.forEach((booking, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${index + 1}. Name: ${booking.name}, Email: ${booking.email}, Phone: ${booking.phone}`;
+                bookingList.appendChild(listItem);
+            });
+        }
+    }
+
+    function clearInputFields() {
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phone").value = "";
+    }
+
+    function updateBookingList() {
+        const bookingList = document.getElementById("bookingList");
+        bookingList.innerHTML = "";
+        displayBookings();
+    }
+
+    function saveToLocalStorage() {
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+    }
+</script>
+</body>
+</html>
